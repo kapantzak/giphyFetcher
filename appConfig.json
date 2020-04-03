@@ -29,7 +29,9 @@
   },
   "sessionStorage": {
     "keys": {
-      "randomId": "randomId"
+      "randomId": "id",
+      "term": "t",
+      "results": "rs"
     }
   }
 }

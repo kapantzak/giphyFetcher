@@ -1,11 +1,18 @@
-import { getRandomId } from "./helpers/apiHelper";
+import { getRandomId, searchGifs } from "./helpers/apiHelper";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../public/css/style.css";
 
 const init = async () => {
-  const randomId = await getRandomId();
-  console.log(randomId);
+  const randomid = await getRandomId();
+  if (randomid) {
+    const gifs = await searchGifs({
+      term: "cat",
+      offset: 0,
+      randomid
+    });
+    console.log(gifs);
+  }
 };
 
 // Use lazy loading ------------------------------ //

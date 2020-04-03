@@ -1,28 +1,28 @@
 import axios from "axios";
-
 import config from "../../appConfig";
 
-const apiKey = config.api.apiKey;
+const endpoints = config.api.endpoints;
 const key_randomId = config.sessionStorage.keys.randomId;
+const key_searchResults = config.sessionStorage.keys.results;
+
+// Random id ---------------------------------------------------------------------------------------------- //
 
 export const getRandomIdRequestUrl = config => {
-  const endpoints = config.api.endpoints;
-  return `${endpoints.base}${endpoints.randomid.url}?${endpoints.randomid.params.key}=${config.api.apiKey}`;
+  const randomid = endpoints.randomid;
+  const params = randomid.params;
+  return `${endpoints.base}${randomid.url}?${params.key}=${config.api.apiKey}`;
 };
 
 export const getRandomId = async () => {
   const cachedRandomId = getCachedRandomId();
   if (cachedRandomId) return cachedRandomId;
   try {
-    const url = getRandomIdRequestUrl(config, apiKey);
+    const url = getRandomIdRequestUrl(config);
     const resp = await axios.get(url);
-    if (resp.status === 200) {
-      const id = ((resp.data || {}).data || {}).random_id || null;
-      cacheRandomId(id);
-      return id;
-    }
-    return ((resp.data || {}).meta || {}).msg || `Error with request to ${url}`;
-  } catch (e) {
+    const id = ((resp.data || {}).data || {}).random_id || null;
+    cacheRandomId(id);
+    return id;
+  } catch (error) {
     return null;
   }
 };
@@ -40,11 +40,68 @@ export const getCachedRandomId = () => {
   return null;
 };
 
-export const getGifs = async term => {
+// Search ------------------------------------------------------------------------------------------------- //
+
+export const searchGifsRequestUrl = ({ config, term, offset, randomid }) => {
+  const endpoints = config.api.endpoints;
+  const search = endpoints.search;
+  const params = search.params;
+  return `${endpoints.base}${search.url}?${params.key}=${config.api.apiKey}&${params.term}=${term}&${params.offset}=${offset}&${params.randomid}=${randomid}`;
+};
+
+export const searchGifs = async ({ term, offset, randomid }) => {
   try {
-    const resp = await axios.get("");
-    return resp.data;
-  } catch (e) {
+    const url = searchGifsRequestUrl({
+      config,
+      term,
+      offset: offset || 0,
+      randomid
+    });
+    const resp = await axios.get(url);
+    const results = resp.data;
+    cacheSearchResults(results);
+    return results;
+  } catch (error) {
     return null;
+  }
+};
+
+const cacheSearchResults = results => {
+  if (sessionStorage) {
+    sessionStorage.setItem(key_searchResults, JSON.stringify(results));
+  }
+};
+
+export const getCachedSearchResults = () => {
+  if (sessionStorage) {
+    const results = sessionStorage.getItem(key_searchResults);
+    try {
+      return JSON.parse(results);
+    } catch (e) {
+      return null;
+    }
+  }
+  return null;
+};
+
+// Autocomplete ------------------------------------------------------------------------------------------- //
+
+export const getAutocompleteRequestUrl = ({ config, term }) => {
+  const endpoints = config.api.endpoints;
+  const autocomplete = endpoints.autocomplete;
+  const params = autocomplete.params;
+  return `${endpoints.base}${autocomplete.url}?${params.key}=${config.api.apiKey}&${params.term}=${term}`;
+};
+
+export const getAutocomplete = async term => {
+  try {
+    const url = getAutocompleteRequestUrl({
+      config,
+      term
+    });
+    const resp = await axios.get(url);
+    return resp.data;
+  } catch (error) {
+    return [];
   }
 };
