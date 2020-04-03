@@ -3,9 +3,10 @@ import {
   appReducer,
   updateTerm,
   updateResults,
-  updateAutocomplete
+  updateAutocomplete,
 } from "./helpers/stateHelper";
 import { getRandomId, searchGifs, getAutocomplete } from "./helpers/apiHelper";
+import { buildAutocompleteOptions } from "./helpers/markupHelper";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../public/css/style.css";
@@ -23,7 +24,7 @@ const getInitialState = async () => {
     randomid,
     term: null,
     autocomplete: [],
-    results: null
+    results: null,
   };
 };
 
@@ -47,27 +48,27 @@ const getStateResults = () => {
   return state.results;
 };
 
-const txtSearchChangeHandler = e => {
+const txtSearchChangeHandler = (e) => {
   const val = e.currentTarget.value;
   store.dispatch(updateTerm(val));
 };
 
 let inputCounter = null;
-const txtSearchInputHandler = async e => {
+const txtSearchInputHandler = async (e) => {
   const val = e.currentTarget.value;
   if (val.length >= 2) {
     if (inputCounter) {
       clearTimeout(inputCounter);
       inputCounter = null;
     }
-    setTimeout(() => {
-      updateAutocompleteState(val);
+    setTimeout(async () => {
+      await updateAutocompleteState(val);
       updateAutocompleteMarkup();
-    }, 500);
+    }, 250);
   }
 };
 
-const updateAutocompleteState = async term => {
+const updateAutocompleteState = async (term) => {
   const optionsData = await getAutocomplete(term);
   if (optionsData) {
     store.dispatch(updateAutocomplete(optionsData.data || []));
@@ -81,22 +82,7 @@ const updateAutocompleteMarkup = () => {
   const dtlSearch = document.getElementById("dtlSearch");
   if (dtlSearch) {
     dtlSearch.innerHTML = autocompleteOptions;
-    dtlSearch.style.display = "block";
   }
-};
-
-const buildAutocompleteOptions = data => {
-  if (data) {
-    return data
-      .reduce((acc, val) => {
-        if (val.hasOwnProperty("name")) {
-          acc.push(`<option value="${val.name}"></option>`);
-        }
-        return acc;
-      }, [])
-      .join("");
-  }
-  return "";
 };
 
 const btnGetTrendingClickHandler = () => {
@@ -114,7 +100,7 @@ const getGifs = async () => {
   const gifs = await searchGifs({
     term,
     offset: 0,
-    randomid
+    randomid,
   });
   if (gifs) {
     store.dispatch(updateResults(gifs));
