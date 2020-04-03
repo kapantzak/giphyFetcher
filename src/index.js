@@ -1,8 +1,11 @@
+import { getRandomId } from "./helpers/apiHelper";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../public/css/style.css";
 
-const init = () => {
-  console.log("initialized");
+const init = async () => {
+  const randomId = await getRandomId();
+  console.log(randomId);
 };
 
 // Use lazy loading ------------------------------ //

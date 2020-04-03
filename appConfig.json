@@ -1,0 +1,35 @@
+{
+  "api": {
+    "apiKey": "oVcyxfxuujkiC2U1RuUBLRkdp46fGKLg",
+    "endpoints": {
+      "base": "http://api.giphy.com/v1/",
+      "search": {
+        "url": "gifs/search",
+        "params": {
+          "key": "api_key",
+          "term": "q",
+          "offset": "offset",
+          "randomid": "random_id"
+        }
+      },
+      "randomid": {
+        "url": "randomid",
+        "params": {
+          "key": "api_key"
+        }
+      },
+      "autocomplete": {
+        "url": "gifs/search/tags",
+        "params": {
+          "key": "api_key",
+          "term": "q"
+        }
+      }
+    }
+  },
+  "sessionStorage": {
+    "keys": {
+      "randomId": "randomId"
+    }
+  }
+}
