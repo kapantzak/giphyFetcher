@@ -12,6 +12,10 @@ export const appReducer = (state, action) => {
       return Object.assign({}, state, {
         results: action.payload.results
       });
+    case "UPDATE_AUTOCOMPLETE":
+      return Object.assign({}, state, {
+        autocomplete: action.payload.autocomplete
+      });
     default:
       return state;
   }
@@ -35,5 +39,12 @@ export const updateResults = results => ({
   type: "UPDATE_RESULTS",
   payload: {
     results
+  }
+});
+
+export const updateAutocomplete = autocomplete => ({
+  type: "UPDATE_AUTOCOMPLETE",
+  payload: {
+    autocomplete
   }
 });

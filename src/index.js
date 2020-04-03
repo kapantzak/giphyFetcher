@@ -1,6 +1,11 @@
 import { createStore } from "redux";
-import { appReducer, updateTerm, updateResults } from "./helpers/stateHelper";
-import { getRandomId, searchGifs } from "./helpers/apiHelper";
+import {
+  appReducer,
+  updateTerm,
+  updateResults,
+  updateAutocomplete
+} from "./helpers/stateHelper";
+import { getRandomId, searchGifs, getAutocomplete } from "./helpers/apiHelper";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../public/css/style.css";
@@ -43,8 +48,55 @@ const getStateResults = () => {
 };
 
 const txtSearchChangeHandler = e => {
-  const term = e.currentTarget.value;
-  store.dispatch(updateTerm(term));
+  const val = e.currentTarget.value;
+  store.dispatch(updateTerm(val));
+};
+
+let inputCounter = null;
+const txtSearchInputHandler = async e => {
+  const val = e.currentTarget.value;
+  if (val.length >= 2) {
+    if (inputCounter) {
+      clearTimeout(inputCounter);
+      inputCounter = null;
+    }
+    setTimeout(() => {
+      updateAutocompleteState(val);
+      updateAutocompleteMarkup();
+    }, 500);
+  }
+};
+
+const updateAutocompleteState = async term => {
+  const optionsData = await getAutocomplete(term);
+  if (optionsData) {
+    store.dispatch(updateAutocomplete(optionsData.data || []));
+  }
+};
+
+const updateAutocompleteMarkup = () => {
+  const state = store.getState();
+  const autocompleteData = state.autocomplete || [];
+  const autocompleteOptions = buildAutocompleteOptions(autocompleteData);
+  const dtlSearch = document.getElementById("dtlSearch");
+  if (dtlSearch) {
+    dtlSearch.innerHTML = autocompleteOptions;
+    dtlSearch.style.display = "block";
+  }
+};
+
+const buildAutocompleteOptions = data => {
+  if (data) {
+    return data
+      .reduce((acc, val) => {
+        if (val.hasOwnProperty("name")) {
+          acc.push(`<option value="${val.name}"></option>`);
+        }
+        return acc;
+      }, [])
+      .join("");
+  }
+  return "";
 };
 
 const btnGetTrendingClickHandler = () => {
@@ -80,6 +132,7 @@ const btnClearClickHandler = () => {
 const addEventListeners = () => {
   const txtSearch = document.getElementById("txtSearch");
   if (txtSearch) {
+    txtSearch.addEventListener("input", txtSearchInputHandler);
     txtSearch.addEventListener("change", txtSearchChangeHandler);
   }
 
