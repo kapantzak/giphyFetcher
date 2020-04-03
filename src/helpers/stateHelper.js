@@ -8,6 +8,10 @@ export const appReducer = (state, action) => {
       return Object.assign({}, state, {
         term: action.payload.term
       });
+    case "UPDATE_RESULTS":
+      return Object.assign({}, state, {
+        results: action.payload.results
+      });
     default:
       return state;
   }
@@ -24,5 +28,12 @@ export const updateTerm = term => ({
   type: "UPDATE_TERM",
   payload: {
     term
+  }
+});
+
+export const updateResults = results => ({
+  type: "UPDATE_RESULTS",
+  payload: {
+    results
   }
 });
