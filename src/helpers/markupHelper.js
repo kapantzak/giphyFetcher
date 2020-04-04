@@ -11,3 +11,5 @@ export const buildAutocompleteOptions = (data) => {
   }
   return "";
 };
+
+export const buildGifHolder = (data) => {};
