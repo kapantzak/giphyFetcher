@@ -1,3 +1,86 @@
+@import url("https://fonts.googleapis.com/css?family=Lobster&display=swap");
+
 body {
-  color: rebeccapurple;
+  background-color: #232323;
+  color: #fafafa;
+}
+
+video {
+  vertical-align: middle;
+}
+
+header {
+  padding: 3vh 0;
+}
+
+h1 {
+  font-family: "Lobster", cursive;
+  color: #f68b24;
+}
+
+#mainContentHolder {
+  min-height: 40vh;
+  background-color: #333;
+  border-radius: 5px;
+  margin: 3vh 0;
+}
+
+#resultsReport {
+  padding: 2vh 0;
+  margin: 1vh 0;
+}
+
+#resultsHolder {
+  text-align: center;
+}
+
+.gif-holder {
+  display: inline-block;
+  position: relative;
+  margin: 5px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.gif-overlay {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: all 250ms ease-in-out;
+}
+
+.gif-holder:hover .gif-overlay {
+  opacity: 1;
+}
+
+.gif-tools {
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#paginationHolder {
+  margin-bottom: 5vh;
+}
+
+.btn-orange {
+  color: #fff;
+  background-color: #f68b24;
+  border-color: #f68b24;
+}
+
+.page-link,
+.page-link:hover {
+  color: #222;
+}
+
+footer {
+  min-height: 25vh;
+  background-color: #111;
+  color: #f68b24;
+  padding: 25px 0;
 }

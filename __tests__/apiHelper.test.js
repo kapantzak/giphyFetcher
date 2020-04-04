@@ -1,7 +1,7 @@
 import {
   getRandomIdRequestUrl,
   searchGifsRequestUrl,
-  getAutocompleteRequestUrl
+  getAutocompleteRequestUrl,
 } from "../src/helpers/apiHelper";
 
 const config = {
@@ -15,27 +15,27 @@ const config = {
           key: "api_key",
           term: "q",
           offset: "offset",
-          randomid: "random_id"
-        }
+          randomid: "random_id",
+        },
       },
       randomid: {
         url: "randomid",
         params: {
-          key: "api_key"
-        }
+          key: "api_key",
+        },
       },
       autocomplete: {
         url: "gifs/search/tags",
         params: {
           key: "api_key",
-          term: "q"
-        }
-      }
-    }
-  }
+          term: "q",
+        },
+      },
+    },
+  },
 };
 
-describe("getRandomIdRequestUrl", () => {
+describe("getRandomIdRequestUrl()", () => {
   test("Returns the expected random id url based on provided config", () => {
     const actual = getRandomIdRequestUrl(config);
     const expected = "http://api.giphy.com/v1/randomid?api_key=API_KEY";
@@ -43,13 +43,13 @@ describe("getRandomIdRequestUrl", () => {
   });
 });
 
-describe("searchGifsRequestUrl", () => {
+describe("searchGifsRequestUrl()", () => {
   test("Returns the expected search url based on provided config", () => {
     const actual = searchGifsRequestUrl({
       config,
       term: "cat",
       offset: 0,
-      randomid: "a_random_id"
+      randomid: "a_random_id",
     });
     const expected =
       "http://api.giphy.com/v1/gifs/search?api_key=API_KEY&q=cat&offset=0&random_id=a_random_id";
@@ -57,11 +57,11 @@ describe("searchGifsRequestUrl", () => {
   });
 });
 
-describe("getAutocompleteRequestUrl", () => {
+describe("getAutocompleteRequestUrl()", () => {
   test("Returns the expected autocomplete url based on provided config", () => {
     const actual = getAutocompleteRequestUrl({
       config,
-      term: "cat"
+      term: "cat",
     });
     const expected =
       "http://api.giphy.com/v1/gifs/search/tags?api_key=API_KEY&q=cat";

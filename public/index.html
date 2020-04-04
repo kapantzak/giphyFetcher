@@ -5,10 +5,80 @@
     <title>Skroutz | Giphy loader</title>
     <meta name="description" content="Gifs fetching app" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script
+      src="https://kit.fontawesome.com/d541667a2e.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
 
   <body>
-    <div class="container">test...</div>
+    <div class="container">
+      <div class="row justify-content-center">
+        <header class="container-fluid text-center">
+          <h1>~ Skroutz giphy loader ~</h1>
+        </header>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-sm-10 col-md-6 col-lg-4">
+          <input
+            id="txtSearch"
+            list="dtlSearch"
+            class="form-control"
+            placeholder="Type and hit Enter"
+          />
+          <datalist id="dtlSearch"></datalist>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="btn-group mt-3" role="group">
+          <button id="btnGetTrending" type="button" class="btn btn-orange">
+            Get trending
+          </button>
+          <button id="btnSearch" type="button" class="btn btn-light">
+            Search
+          </button>
+          <button id="btnClear" type="button" class="btn btn-light">
+            Clear
+          </button>
+        </div>
+      </div>
+      <div id="mainContentHolder" class="row">        
+        <div class="container-fluid">
+          <p id="resultsReport">No results</p>
+        </div>        
+        <div class="container-fluid">
+          <div id="resultsHolder"></div>
+        </div>        
+      </div>
+      <div class="row justify-content-center">
+        <div id="paginationHolder">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li class="page-item">
+                <a class="page-link" href="#"
+                  ><i class="fas fa-angle-left"></i
+                ></a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#"
+                  ><i class="fas fa-angle-right"></i
+                ></a>
+              </li>
+            </ul>
+          </li>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <div class="container">
+        <p>✌️ Frontend challenge</p>
+        <p>March 2020</p>
+        <p>Developed by John Kapantzakis for Skroutz</p>
+      </div>
+    </footer>
 
     <script src="main.bundle.js"></script>
   </body>
