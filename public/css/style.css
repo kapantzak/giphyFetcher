@@ -49,3 +49,8 @@ h1 {
   background-color: #f68b24;
   border-color: #f68b24;
 }
+
+.page-link,
+.page-link:hover {
+  color: #222;
+}

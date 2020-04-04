@@ -5,6 +5,10 @@
     <title>Skroutz | Giphy loader</title>
     <meta name="description" content="Gifs fetching app" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script
+      src="https://kit.fontawesome.com/d541667a2e.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
 
   <body>
@@ -39,25 +43,27 @@
         </div>
       </div>
       <div class="row">
-        <div id="resultsHolder" class="container-fluid mt-5 text-center">
-          <div class="gif-holder">
-            <img
-              src="https://media0.giphy.com/media/mlvseq9yvZhba/200_d.gif?cid=2c15220aa1aaacd34cfb35a6384f62dc4abfd9f18e05cc09&rid=200_d.gif"
-              alt="[title]"
-            />
-            <div class="gif-overlay">
-              <div class="gif-tools">
-                <div class="btn-group btn-group-sm" role="group">
-                  <button type="button" class="btn btn-outline-light">
-                    Delete
-                  </button>
-                  <button type="button" class="btn btn-outline-light">
-                    Copy link
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div id="resultsHolder" class="container-fluid mt-5 text-center"></div>
+      </div>
+      <div class="row justify-content-center">
+        <div id="paginationHolder">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li class="page-item">
+                <a class="page-link" href="#"
+                  ><i class="fas fa-angle-left"></i
+                ></a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#"
+                  ><i class="fas fa-angle-right"></i
+                ></a>
+              </li>
+            </ul>
+          </li>
         </div>
       </div>
     </div>
