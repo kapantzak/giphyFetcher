@@ -18,9 +18,28 @@ h1 {
   color: #f68b24;
 }
 
+#mainContentHolder {
+  min-height: 40vh;
+  background-color: #333;
+  border-radius: 5px;
+  margin: 3vh 0;
+}
+
+#resultsReport {
+  padding: 2vh 0;
+  margin: 1vh 0;
+}
+
+#resultsHolder {
+  text-align: center;
+}
+
 .gif-holder {
   display: inline-block;
   position: relative;
+  margin: 5px;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
 .gif-overlay {
@@ -44,6 +63,10 @@ h1 {
   transform: translateY(-50%);
 }
 
+#paginationHolder {
+  margin-bottom: 5vh;
+}
+
 .btn-orange {
   color: #fff;
   background-color: #f68b24;
@@ -53,4 +76,11 @@ h1 {
 .page-link,
 .page-link:hover {
   color: #222;
+}
+
+footer {
+  min-height: 25vh;
+  background-color: #111;
+  color: #f68b24;
+  padding: 25px 0;
 }

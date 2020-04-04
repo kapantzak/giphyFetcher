@@ -1,5 +1,6 @@
 import {
   buildAutocompleteOptions,
+  getResultsReport,
   buildGifHolder,
   getElem,
   getImageElem,
@@ -44,6 +45,57 @@ describe("buildAutocompleteOptions()", () => {
     const actual = buildAutocompleteOptions(data);
     const expected = `<option value="item 1"></option>`;
     expect(actual).toBe(expected);
+  });
+});
+
+describe("getResultsReport()", () => {
+  test("Returns the expected text", () => {
+    const paginationData = {
+      total_count: 93688,
+      count: 25,
+      offset: 0,
+    };
+    const actual = getResultsReport(paginationData);
+    const expected = "Displaying 25 of 93688 results";
+    expect(actual).toBe(expected);
+  });
+
+  test("Returns empty string if total_count is null", () => {
+    const paginationData = {
+      total_count: null,
+      count: 25,
+      offset: 0,
+    };
+    const actual = getResultsReport(paginationData);
+    expect(actual).toBe("");
+  });
+
+  test("Returns empty string if total_count is undefined", () => {
+    const paginationData = {
+      count: 25,
+      offset: 0,
+    };
+    const actual = getResultsReport(paginationData);
+    expect(actual).toBe("");
+  });
+
+  test("Returns empty string if count is null", () => {
+    const paginationData = {
+      total_count: 93688,
+      count: null,
+      offset: 0,
+    };
+    const actual = getResultsReport(paginationData);
+    expect(actual).toBe("");
+  });
+
+  test("Returns empty string if count is undefined", () => {
+    const paginationData = {
+      total_count: 93688,
+      offset: 0,
+    };
+    const actual = getResultsReport(paginationData);
+    expect(actual).toBe("");
   });
 });
 

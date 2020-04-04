@@ -6,7 +6,11 @@ import {
   updateAutocomplete,
 } from "./helpers/stateHelper";
 import { getRandomId, searchGifs, getAutocomplete } from "./helpers/apiHelper";
-import { buildAutocompleteOptions } from "./helpers/markupHelper";
+import {
+  buildAutocompleteOptions,
+  getResultsReport,
+  buildGifHolder,
+} from "./helpers/markupHelper";
 import { transformApiResponseObject } from "./helpers/transformationHelper";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -86,10 +90,36 @@ const updateAutocompleteMarkup = () => {
   }
 };
 
-const updateResultsMarkup = () => {
+const updateMarkup = () => {
   const state = store.getState();
-  const results = state.results;
-  console.log(results);
+  updateResultsMarkup(state);
+  updatePaginationMarkup(state);
+};
+
+const updateResultsMarkup = (state) => {
+  const gifs = state.results.data;
+  const resultsHolderElem = document.getElementById("resultsHolder");
+  if (resultsHolderElem) {
+    resultsHolderElem.innerHTML = "";
+    (gifs || []).forEach((x) => {
+      const gifHolder = buildGifHolder(x);
+      resultsHolderElem.appendChild(gifHolder);
+    });
+  }
+  console.log(gifs);
+};
+
+const updatePaginationMarkup = (state) => {
+  const pagination = state.results.pagination;
+  updateResultsResportMarkup(pagination);
+};
+
+const updateResultsResportMarkup = (pagination) => {
+  const resultsReport = getResultsReport(pagination);
+  const resultsReportElem = document.getElementById("resultsReport");
+  if (resultsReportElem) {
+    resultsReportElem.innerHTML = resultsReport;
+  }
 };
 
 // Event listeners ------------------------------------------------------------- //
@@ -98,7 +128,7 @@ const txtSearchChangeHandler = async (e) => {
   const val = e.currentTarget.value;
   store.dispatch(updateTerm(val));
   await getGifs();
-  console.log(getStateResults());
+  updateMarkup();
 };
 
 const txtSearchKeyPressHandler = (e) => {

@@ -12,6 +12,21 @@ export const buildAutocompleteOptions = (data) => {
   return "";
 };
 
+export const getResultsReport = (paginationData) => {
+  if (paginationData) {
+    const total = paginationData.total_count;
+    const count = paginationData.count;
+    if (
+      total !== undefined &&
+      total !== null &&
+      count !== undefined &&
+      count !== null
+    )
+      return `Displaying ${paginationData.count} of ${paginationData.total_count} results`;
+  }
+  return "";
+};
+
 export const getImageElem = ({ imgSrc, title }) => {
   const img = getElem("img");
   img.src = imgSrc;
