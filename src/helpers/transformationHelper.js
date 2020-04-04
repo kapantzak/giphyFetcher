@@ -1,10 +1,10 @@
 export const transformApiImageToStateData = (apiData) => {
-  if (apiData && apiData.url) {
+  if (apiData && apiData.id && apiData.url) {
     const imgSrc = getImageSrcFromApiData(apiData);
     if (imgSrc) {
       return {
+        id: apiData.id,
         type: apiData.type || null,
-        id: apiData.id || null,
         gifUrl: apiData.url,
         title: apiData.title,
         imgSrc,

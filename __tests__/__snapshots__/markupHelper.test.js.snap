@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`buildGifHolder() Renders correctly 1`] = `
+<div
+  class="gif-holder"
+>
+  <img
+    src="https://path/to/image.gif"
+    title="img_title"
+  />
+  <div
+    class="gif-overlay"
+  >
+    <div
+      class="gif-tools"
+    >
+      <div
+        class="btn-group btn-group-sm"
+        role="group"
+      >
+        <button
+          class="btn btn-outline-light"
+          title="Delete this gif"
+          type="button"
+        >
+          Delete
+        </button>
+        <button
+          class="btn btn-outline-light"
+          title="Copy link to clipboard"
+          type="button"
+        >
+          Copy link
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`getCopyLinkGifButton() Renders corectly 1`] = `
+<button
+  class="btn btn-outline-light"
+  title="Copy link to clipboard"
+  type="button"
+>
+  Copy link
+</button>
+`;
+
+exports[`getDeleteGifButton() Renders corectly 1`] = `
+<button
+  class="btn btn-outline-light"
+  title="Delete this gif"
+  type="button"
+>
+  Delete
+</button>
+`;
+
+exports[`getImageElem() Renders corectly 1`] = `
+<img
+  src="https://path/to/img.gif"
+  title="img_title"
+/>
+`;
