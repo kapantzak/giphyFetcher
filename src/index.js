@@ -7,6 +7,7 @@ import {
 } from "./helpers/stateHelper";
 import { getRandomId, searchGifs, getAutocomplete } from "./helpers/apiHelper";
 import { buildAutocompleteOptions } from "./helpers/markupHelper";
+import { transformApiResponseObject } from "./helpers/transformationHelper";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../public/css/style.css";
@@ -17,6 +18,8 @@ const init = async () => {
   await initStore();
   addEventListeners();
 };
+
+// State ----------------------------------------------------------------------- //
 
 const getInitialState = async () => {
   const randomid = await getRandomId();
@@ -48,9 +51,60 @@ const getStateResults = () => {
   return state.results;
 };
 
-const txtSearchChangeHandler = (e) => {
+const updateAutocompleteState = async (term) => {
+  const optionsData = await getAutocomplete(term);
+  if (optionsData) {
+    store.dispatch(updateAutocomplete(optionsData.data || []));
+  }
+};
+
+// API calls ------------------------------------------------------------------- //
+
+const getGifs = async () => {
+  const term = getStateTerm();
+  const randomid = getStateRandomid();
+  const gifs = await searchGifs({
+    term,
+    offset: 0,
+    randomid,
+  });
+  if (gifs) {
+    const stateApiResponseObject = transformApiResponseObject(gifs);
+    store.dispatch(updateResults(stateApiResponseObject));
+  }
+};
+
+// Markup ---------------------------------------------------------------------- //
+
+const updateAutocompleteMarkup = () => {
+  const state = store.getState();
+  const autocompleteData = state.autocomplete || [];
+  const autocompleteOptions = buildAutocompleteOptions(autocompleteData);
+  const dtlSearch = document.getElementById("dtlSearch");
+  if (dtlSearch) {
+    dtlSearch.innerHTML = autocompleteOptions;
+  }
+};
+
+const updateResultsMarkup = () => {
+  const state = store.getState();
+  const results = state.results;
+  console.log(results);
+};
+
+// Event listeners ------------------------------------------------------------- //
+
+const txtSearchChangeHandler = async (e) => {
   const val = e.currentTarget.value;
   store.dispatch(updateTerm(val));
+  await getGifs();
+  console.log(getStateResults());
+};
+
+const txtSearchKeyPressHandler = (e) => {
+  if (e.key === "Enter") {
+    e.currentTarget.blur();
+  }
 };
 
 let inputCounter = null;
@@ -68,43 +122,8 @@ const txtSearchInputHandler = async (e) => {
   }
 };
 
-const updateAutocompleteState = async (term) => {
-  const optionsData = await getAutocomplete(term);
-  if (optionsData) {
-    store.dispatch(updateAutocomplete(optionsData.data || []));
-  }
-};
-
-const updateAutocompleteMarkup = () => {
-  const state = store.getState();
-  const autocompleteData = state.autocomplete || [];
-  const autocompleteOptions = buildAutocompleteOptions(autocompleteData);
-  const dtlSearch = document.getElementById("dtlSearch");
-  if (dtlSearch) {
-    dtlSearch.innerHTML = autocompleteOptions;
-  }
-};
-
 const btnGetTrendingClickHandler = () => {
   alert("Get trending");
-};
-
-const btnSearchClickHandler = async () => {
-  await getGifs();
-  console.log(getStateResults());
-};
-
-const getGifs = async () => {
-  const term = getStateTerm();
-  const randomid = getStateRandomid();
-  const gifs = await searchGifs({
-    term,
-    offset: 0,
-    randomid,
-  });
-  if (gifs) {
-    store.dispatch(updateResults(gifs));
-  }
 };
 
 const btnClearClickHandler = () => {
@@ -116,26 +135,26 @@ const btnClearClickHandler = () => {
 };
 
 const addEventListeners = () => {
+  // Text input
   const txtSearch = document.getElementById("txtSearch");
   if (txtSearch) {
     txtSearch.addEventListener("input", txtSearchInputHandler);
     txtSearch.addEventListener("change", txtSearchChangeHandler);
+    txtSearch.addEventListener("keypress", txtSearchKeyPressHandler);
   }
 
+  // Get trending button
   const btnGetTrending = document.getElementById("btnGetTrending");
   if (btnGetTrending) {
     btnGetTrending.addEventListener("click", btnGetTrendingClickHandler);
   }
 
-  const btnSearch = document.getElementById("btnSearch");
-  if (btnSearch) {
-    btnSearch.addEventListener("click", btnSearchClickHandler);
-  }
-
+  // Clear button
   const btnClear = document.getElementById("btnClear");
   if (btnClear) {
     btnClear.addEventListener("click", btnClearClickHandler);
   }
 };
 
+// Document content loaded
 document.addEventListener("DOMContentLoaded", init);

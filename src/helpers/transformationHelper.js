@@ -1,4 +1,30 @@
-export const transformApiImageToStateData = (apiData) => {
+/**
+ * Transforms the search endpoint response object to contain only the required information
+ * @param {SearchEndpointObject} apiResponseObject
+ * @returns {StateObject}
+ */
+export const transformApiResponseObject = (apiResponseObject) => {
+  if (
+    apiResponseObject &&
+    apiResponseObject.data &&
+    apiResponseObject.pagination
+  ) {
+    const apiDataCollection = apiResponseObject.data.slice();
+    const stateData = apiDataCollection.map(transformGifObjectStateData);
+    return {
+      data: stateData,
+      pagination: Object.assign({}, apiResponseObject.pagination),
+    };
+  }
+  return null;
+};
+
+/**
+ * Transforms the gif object to contain only the required information
+ * @param {GifObject} apiData
+ * @returns {StateGifObject}
+ */
+export const transformGifObjectStateData = (apiData) => {
   if (apiData && apiData.id && apiData.url) {
     const imgSrc = getImageSrcFromApiData(apiData);
     if (imgSrc) {
