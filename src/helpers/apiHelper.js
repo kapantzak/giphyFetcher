@@ -1,13 +1,17 @@
 import axios from "axios";
 import config from "../../appConfig";
+import {
+  cacheRandomId,
+  getCachedRandomId,
+  cacheSearchResults,
+} from "./sessionHelper";
+import { transformApiResponseObject } from "./transformationHelper";
 
 const endpoints = config.api.endpoints;
-const key_randomId = config.sessionStorage.keys.randomId;
-const key_searchResults = config.sessionStorage.keys.results;
 
 // Random id ---------------------------------------------------------------------------------------------- //
 
-export const getRandomIdRequestUrl = config => {
+export const getRandomIdRequestUrl = (config) => {
   const randomid = endpoints.randomid;
   const params = randomid.params;
   return `${endpoints.base}${randomid.url}?${params.key}=${config.api.apiKey}`;
@@ -27,19 +31,6 @@ export const getRandomId = async () => {
   }
 };
 
-const cacheRandomId = id => {
-  if (sessionStorage) {
-    sessionStorage.setItem(key_randomId, id);
-  }
-};
-
-export const getCachedRandomId = () => {
-  if (sessionStorage) {
-    return sessionStorage.getItem(key_randomId);
-  }
-  return null;
-};
-
 // Search ------------------------------------------------------------------------------------------------- //
 
 export const searchGifsRequestUrl = ({ config, term, offset, randomid }) => {
@@ -55,33 +46,16 @@ export const searchGifs = async ({ term, offset, randomid }) => {
       config,
       term,
       offset: offset || 0,
-      randomid
+      randomid,
     });
     const resp = await axios.get(url);
     const results = resp.data;
-    cacheSearchResults(results);
-    return results;
+    const stateApiResponseObject = transformApiResponseObject(results);
+    cacheSearchResults(stateApiResponseObject);
+    return stateApiResponseObject;
   } catch (error) {
     return null;
   }
-};
-
-const cacheSearchResults = results => {
-  if (sessionStorage) {
-    sessionStorage.setItem(key_searchResults, JSON.stringify(results));
-  }
-};
-
-export const getCachedSearchResults = () => {
-  if (sessionStorage) {
-    const results = sessionStorage.getItem(key_searchResults);
-    try {
-      return JSON.parse(results);
-    } catch (e) {
-      return null;
-    }
-  }
-  return null;
 };
 
 // Autocomplete ------------------------------------------------------------------------------------------- //
@@ -93,11 +67,11 @@ export const getAutocompleteRequestUrl = ({ config, term }) => {
   return `${endpoints.base}${autocomplete.url}?${params.key}=${config.api.apiKey}&${params.term}=${term}`;
 };
 
-export const getAutocomplete = async term => {
+export const getAutocomplete = async (term) => {
   try {
     const url = getAutocompleteRequestUrl({
       config,
-      term
+      term,
     });
     const resp = await axios.get(url);
     return resp.data;

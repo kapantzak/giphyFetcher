@@ -11,7 +11,12 @@ import {
   getResultsReport,
   buildGifHolder,
 } from "./helpers/markupHelper";
-import { transformApiResponseObject } from "./helpers/transformationHelper";
+import {
+  getCachedSearchResults,
+  cacheSearchTerm,
+  clearCachedSearchTerm,
+  getCachedSearchTerm,
+} from "./helpers/sessionHelper";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../public/css/style.css";
@@ -21,6 +26,7 @@ let store = null;
 const init = async () => {
   await initStore();
   addEventListeners();
+  updateMarkup();
 };
 
 // State ----------------------------------------------------------------------- //
@@ -29,10 +35,20 @@ const getInitialState = async () => {
   const randomid = await getRandomId();
   return {
     randomid,
-    term: null,
+    term: getInitialSearchTerm(),
     autocomplete: [],
-    results: null,
+    results: getInitialResults(),
   };
+};
+
+const getInitialSearchTerm = () => {
+  const cachedSearchTerm = getCachedSearchTerm();
+  return cachedSearchTerm || null;
+};
+
+const getInitialResults = () => {
+  const cachedResults = getCachedSearchResults();
+  return cachedResults || null;
 };
 
 const initStore = async () => {
@@ -73,8 +89,7 @@ const getGifs = async () => {
     randomid,
   });
   if (gifs) {
-    const stateApiResponseObject = transformApiResponseObject(gifs);
-    store.dispatch(updateResults(stateApiResponseObject));
+    store.dispatch(updateResults(gifs));
   }
 };
 
@@ -92,8 +107,19 @@ const updateAutocompleteMarkup = () => {
 
 const updateMarkup = () => {
   const state = store.getState();
+  updateSearchTermValue(state);
   updateResultsMarkup(state);
   updatePaginationMarkup(state);
+};
+
+const updateSearchTermValue = (state) => {
+  const term = state.term;
+  if (term) {
+    const txtSearch = document.getElementById("txtSearch");
+    if (txtSearch) {
+      txtSearch.value = term;
+    }
+  }
 };
 
 const updateResultsMarkup = (state) => {
@@ -127,6 +153,7 @@ const updateResultsResportMarkup = (pagination) => {
 const txtSearchChangeHandler = async (e) => {
   const val = e.currentTarget.value;
   store.dispatch(updateTerm(val));
+  cacheSearchTerm(val);
   await getGifs();
   updateMarkup();
 };
@@ -162,6 +189,7 @@ const btnClearClickHandler = () => {
     txtSearch.value = "";
   }
   store.dispatch(updateTerm(null));
+  clearCachedSearchTerm();
 };
 
 const addEventListeners = () => {
