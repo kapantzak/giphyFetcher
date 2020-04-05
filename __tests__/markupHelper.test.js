@@ -1,11 +1,18 @@
 import {
   buildAutocompleteOptions,
   getResultsReport,
+  getNoResultsFeedback,
+  getPromptSearch,
   buildGifHolder,
   getElem,
   getImageElem,
   getDeleteGifButton,
   getCopyLinkGifButton,
+  getPaginationItemRest,
+  getPaginationItem,
+  getNumberOfPages,
+  getPaginationItemArrow,
+  getPaginationArrow,
 } from "../src/helpers/markupHelper";
 
 describe("buildAutocompleteOptions()", () => {
@@ -60,42 +67,66 @@ describe("getResultsReport()", () => {
     expect(actual).toBe(expected);
   });
 
-  test("Returns empty string if total_count is null", () => {
+  test("Renders correct icon if total_count is null", () => {
     const paginationData = {
       total_count: null,
       count: 25,
       offset: 0,
     };
     const actual = getResultsReport(paginationData);
-    expect(actual).toBe("");
+    expect(actual).toMatchSnapshot();
   });
 
-  test("Returns empty string if total_count is undefined", () => {
+  test("Renders correct icon if total_count is undefined", () => {
     const paginationData = {
       count: 25,
       offset: 0,
     };
     const actual = getResultsReport(paginationData);
-    expect(actual).toBe("");
+    expect(actual).toMatchSnapshot();
   });
 
-  test("Returns empty string if count is null", () => {
+  test("Renders correct icon if count is null", () => {
     const paginationData = {
       total_count: 93688,
       count: null,
       offset: 0,
     };
     const actual = getResultsReport(paginationData);
-    expect(actual).toBe("");
+    expect(actual).toMatchSnapshot();
   });
 
-  test("Returns empty string if count is undefined", () => {
+  test("Renders correct icon if count is undefined", () => {
     const paginationData = {
       total_count: 93688,
       offset: 0,
     };
     const actual = getResultsReport(paginationData);
-    expect(actual).toBe("");
+    expect(actual).toMatchSnapshot();
+  });
+
+  test("Renders correct icon if paginationData is null", () => {
+    const actual = getResultsReport(null);
+    expect(actual).toMatchSnapshot();
+  });
+
+  test("Renders correct icon if paginationData is undefined", () => {
+    const actual = getResultsReport();
+    expect(actual).toMatchSnapshot();
+  });
+});
+
+describe("getNoResultsFeedback()", () => {
+  test("Renders correctly", () => {
+    const item = getNoResultsFeedback();
+    expect(item).toMatchSnapshot();
+  });
+});
+
+describe("getPromptSearch()", () => {
+  test("Renders correctly", () => {
+    const item = getPromptSearch();
+    expect(item).toMatchSnapshot();
   });
 });
 
@@ -177,5 +208,72 @@ describe("getCopyLinkGifButton()", () => {
   test("Returns button with text 'Copy link'", () => {
     const btn = getCopyLinkGifButton("https://path/to/img.html");
     expect(btn.innerHTML).toBe("Copy link");
+  });
+});
+
+describe("getPaginationItemRest()", () => {
+  test("Renders correctly", () => {
+    const actual = getPaginationItemRest();
+    expect(actual).toMatchSnapshot();
+  });
+});
+
+describe("getPaginationItem()", () => {
+  test("Renders correctly", () => {
+    const callback = () => {};
+    const actual = getPaginationItem(1, callback);
+    expect(actual).toMatchSnapshot();
+  });
+
+  test("Active page rendered correctly", () => {
+    const callback = () => {};
+    const actual = getPaginationItem(1, callback, true);
+    expect(actual).toMatchSnapshot();
+  });
+});
+
+describe("getNumberOfPages()", () => {
+  test.each([
+    [1, 25, 25],
+    [2, 25, 50],
+    [2, 25, 26],
+    [1, 25, 1],
+  ])(
+    "Returns %d pages for count %d of total %d",
+    (expected, count, totalCount) => {
+      const actual = getNumberOfPages({ count, totalCount });
+      expect(actual).toBe(expected);
+    }
+  );
+});
+
+describe("getPaginationItemArrow()", () => {
+  const callback = () => {};
+
+  test("Left item renders correctly", () => {
+    const actual = getPaginationItemArrow("left", callback);
+    expect(actual).toMatchSnapshot();
+  });
+
+  test("Right item renders correctly", () => {
+    const actual = getPaginationItemArrow("right", callback);
+    expect(actual).toMatchSnapshot();
+  });
+
+  test("Returns null for invalid direction parameter", () => {
+    const actual = getPaginationItemArrow("up", callback);
+    expect(actual).toBeNull();
+  });
+});
+
+describe("getPaginationArrow()", () => {
+  test("Prev arrow renders correctly", () => {
+    const actual = getPaginationArrow("left");
+    expect(actual).toMatchSnapshot();
+  });
+
+  test("Next arrow renders correctly", () => {
+    const actual = getPaginationArrow("right");
+    expect(actual).toMatchSnapshot();
   });
 });

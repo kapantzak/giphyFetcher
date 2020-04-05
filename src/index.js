@@ -80,12 +80,12 @@ const updateAutocompleteState = async (term) => {
 
 // API calls ------------------------------------------------------------------- //
 
-const getGifs = async () => {
+const getGifs = async (offset = 0) => {
   const term = getStateTerm();
   const randomid = getStateRandomid();
   const gifs = await searchGifs({
     term,
-    offset: 0,
+    offset,
     randomid,
   });
   if (gifs) {
@@ -123,7 +123,7 @@ const updateSearchTermValue = (state) => {
 };
 
 const updateResultsMarkup = (state) => {
-  const gifs = state.results.data;
+  const gifs = (state.results || {}).data || null;
   const resultsHolderElem = document.getElementById("resultsHolder");
   if (resultsHolderElem) {
     resultsHolderElem.innerHTML = "";
@@ -136,8 +136,9 @@ const updateResultsMarkup = (state) => {
 };
 
 const updatePaginationMarkup = (state) => {
-  const pagination = state.results.pagination;
+  const pagination = (state.results || {}).pagination || null;
   updateResultsResportMarkup(pagination);
+  updatePaginationElement(pagination);
 };
 
 const updateResultsResportMarkup = (pagination) => {
@@ -145,6 +146,13 @@ const updateResultsResportMarkup = (pagination) => {
   const resultsReportElem = document.getElementById("resultsReport");
   if (resultsReportElem) {
     resultsReportElem.innerHTML = resultsReport;
+  }
+};
+
+const updatePaginationElement = (pagination) => {
+  const paginationHolder = document.getElementById("paginationHolder");
+  if (paginationHolder) {
+    //
   }
 };
 
