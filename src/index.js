@@ -17,11 +17,13 @@ import {
   clearCachedSearchTerm,
   getCachedSearchTerm,
 } from "./helpers/sessionHelper";
+import { getPaginationObject } from "./helpers/paginationHelper";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../public/css/style.css";
 
 let store = null;
+let paginationObj = null;
 
 const init = async () => {
   await initStore();
@@ -71,6 +73,10 @@ const getStateResults = () => {
   return state.results;
 };
 
+const getStatePaginationOffset = () => {
+  return ((getStateResults() || {}).pagination || {}).offset || 0;
+};
+
 const updateAutocompleteState = async (term) => {
   const optionsData = await getAutocomplete(term);
   if (optionsData) {
@@ -91,6 +97,11 @@ const getGifs = async (offset = 0) => {
   if (gifs) {
     store.dispatch(updateResults(gifs));
   }
+};
+
+const getGifsAndUpdateResults = async (offset = 0) => {
+  await getGifs(offset);
+  updateMarkup();
 };
 
 // Markup ---------------------------------------------------------------------- //
@@ -149,10 +160,37 @@ const updateResultsResportMarkup = (pagination) => {
   }
 };
 
-const updatePaginationElement = (pagination) => {
-  const paginationHolder = document.getElementById("paginationHolder");
-  if (paginationHolder) {
-    //
+// Pagination ------------------------------------------------------------------ //
+
+const pageNavigationHandler = async (pageNumOrAction) => {
+  const offset = getStatePaginationOffset();
+  if (pageNumOrAction === "left") {
+    await getGifsAndUpdateResults(offset + 1);
+  } else if (pageNumOrAction === "right") {
+    await getGifsAndUpdateResults(offset - 1);
+  } else {
+    const num = Number(pageNumOrAction);
+    if (!isNaN(num)) {
+      await getGifsAndUpdateResults(num - 1);
+    }
+  }
+};
+
+const updatePaginationElement = (paginationData) => {
+  if (paginationData) {
+    if (!paginationObj) {
+      const paginationHolder = document.getElementById("paginationHolder");
+      if (paginationHolder) {
+        paginationObj = getPaginationObject(paginationHolder, {
+          offset: paginationData.offset,
+          count: paginationData.count,
+          totalCount: paginationData.total_count,
+          callback: pageNavigationHandler,
+        });
+      }
+    } else {
+      // Update pagination object with active page
+    }
   }
 };
 
@@ -162,8 +200,7 @@ const txtSearchChangeHandler = async (e) => {
   const val = e.currentTarget.value;
   store.dispatch(updateTerm(val));
   cacheSearchTerm(val);
-  await getGifs();
-  updateMarkup();
+  await getGifsAndUpdateResults();
 };
 
 const txtSearchKeyPressHandler = (e) => {
