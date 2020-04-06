@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [v1.1.1] - 2020-04-07
+
+### Fixed
+- favicon path
+
 ## [v1.1.0] - 2020-04-07
 
 ### Added
@@ -46,6 +51,7 @@
 - Pagination HTML
 
 [Unreleased]: https://github.com/kapantzak/giphyFetcher/compare/master...develop
+[v1.1.1]: https://github.com/kapantzak/giphyFetcher/compare/v1.1.0...v1.1.1
 [v1.1.0]: https://github.com/kapantzak/giphyFetcher/compare/v1.0.0...v1.1.0
 [v1.0.0]: https://github.com/kapantzak/giphyFetcher/compare/v0.4.0...v1.0.0
 [v0.4.0]: https://github.com/kapantzak/giphyFetcher/compare/v0.3.1...v0.4.0
