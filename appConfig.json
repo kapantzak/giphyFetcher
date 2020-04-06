@@ -2,7 +2,7 @@
   "api": {
     "apiKey": "oVcyxfxuujkiC2U1RuUBLRkdp46fGKLg",
     "endpoints": {
-      "base": "http://api.giphy.com/v1/",
+      "base": "https://api.giphy.com/v1/",
       "search": {
         "url": "gifs/search",
         "params": {
@@ -23,6 +23,14 @@
         "params": {
           "key": "api_key",
           "term": "q"
+        }
+      },
+      "trending": {
+        "url": "gifs/trending",
+        "params": {
+          "key": "api_key",
+          "offset": "offset",
+          "randomid": "random_id"
         }
       }
     }

@@ -58,6 +58,32 @@ export const searchGifs = async ({ term, offset, randomid }) => {
   }
 };
 
+// Trending ----------------------------------------------------------------------------------------------- //
+
+export const trendingRequestUrl = ({ config, offset, randomid }) => {
+  const endpoints = config.api.endpoints;
+  const trending = endpoints.trending;
+  const params = trending.params;
+  return `${endpoints.base}${trending.url}?${params.key}=${config.api.apiKey}&${params.offset}=${offset}&${params.randomid}=${randomid}`;
+};
+
+export const trendingGifs = async ({ offset, randomid }) => {
+  try {
+    const url = trendingRequestUrl({
+      config,
+      offset: offset || 0,
+      randomid,
+    });
+    const resp = await axios.get(url);
+    const results = resp.data;
+    const stateApiResponseObject = transformApiResponseObject(results);
+    cacheSearchResults(stateApiResponseObject);
+    return stateApiResponseObject;
+  } catch (error) {
+    return null;
+  }
+};
+
 // Autocomplete ------------------------------------------------------------------------------------------- //
 
 export const getAutocompleteRequestUrl = ({ config, term }) => {

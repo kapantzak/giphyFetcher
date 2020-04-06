@@ -5,8 +5,14 @@ import {
   updateResults,
   updateAutocomplete,
   deleteGif,
+  setTrending,
 } from "./helpers/stateHelper";
-import { getRandomId, searchGifs, getAutocomplete } from "./helpers/apiHelper";
+import {
+  getRandomId,
+  searchGifs,
+  getAutocomplete,
+  trendingGifs,
+} from "./helpers/apiHelper";
 import {
   buildAutocompleteOptions,
   getResultsReport,
@@ -39,10 +45,10 @@ const getInitialState = async () => {
   const randomid = await getRandomId();
   return {
     randomid,
+    trending: false,
     term: getInitialSearchTerm(),
     autocomplete: [],
     results: getInitialResults(),
-    totalItemsFeched: 0,
   };
 };
 
@@ -69,6 +75,11 @@ const getStateTerm = () => {
 const getStateRandomid = () => {
   const state = store.getState();
   return state.randomid;
+};
+
+const getStateTrending = () => {
+  const state = store.getState();
+  return state.trending;
 };
 
 const getStateResults = () => {
@@ -108,8 +119,25 @@ const getGifs = async (offset = 0) => {
 };
 
 const getGifsAndUpdateResults = async (offset = 0) => {
-  console.log(offset);
+  store.dispatch(setTrending(false));
   await getGifs(offset);
+  updateMarkup();
+};
+
+const getTrendingGifs = async (offset = 0) => {
+  const randomid = getStateRandomid();
+  const gifs = await trendingGifs({
+    offset,
+    randomid,
+  });
+  if (gifs) {
+    store.dispatch(updateResults(gifs));
+  }
+};
+
+const getTrendingGifsAndUpdateResults = async (offset = 0) => {
+  store.dispatch(setTrending(true));
+  await getTrendingGifs(offset);
   updateMarkup();
 };
 
@@ -185,7 +213,11 @@ const pageNavigationHandler = async (pageNumOrAction) => {
       requestOffset = (num - 1) * count;
     }
   }
-  await getGifsAndUpdateResults(requestOffset);
+  if (getStateTrending()) {
+    await getTrendingGifsAndUpdateResults(requestOffset);
+  } else {
+    await getGifsAndUpdateResults(requestOffset);
+  }
 };
 
 const updatePaginationElement = (paginationData) => {
@@ -242,8 +274,8 @@ const txtSearchInputHandler = async (e) => {
   }
 };
 
-const btnGetTrendingClickHandler = () => {
-  alert("Get trending");
+const btnGetTrendingClickHandler = async () => {
+  await getTrendingGifsAndUpdateResults();
 };
 
 const btnClearClickHandler = () => {
