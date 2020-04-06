@@ -22,6 +22,10 @@ export const appReducer = (state, action) => {
           data: state.results.data.filter((x) => x.id !== action.payload.gifId),
         }),
       });
+    case "UPDATE_TOTAL_ITEMS_FETCHED":
+      return Object.assign({}, state, {
+        totalItemsFeched: action.payload.totalItemsFeched,
+      });
     default:
       return state;
   }
@@ -59,5 +63,12 @@ export const deleteGif = (gifId) => ({
   type: "DELETE_GIF",
   payload: {
     gifId,
+  },
+});
+
+export const updateTotalItemsFetched = (totalItemsFeched) => ({
+  type: "UPDATE_TOTAL_ITEMS_FETCHED",
+  payload: {
+    totalItemsFeched,
   },
 });

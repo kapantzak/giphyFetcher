@@ -34,6 +34,9 @@ describe("getNumberOfPages()", () => {
     [2, 25, 50],
     [2, 25, 26],
     [1, 25, 1],
+    [200, 25, 5000],
+    [200, 25, 10000],
+    [200, 25, 100000],
   ])(
     "Returns %d pages for count %d of total %d",
     (expected, count, totalCount) => {
@@ -82,72 +85,16 @@ describe("getPaginationArrow()", () => {
 
 describe("getArrayOfPages()", () => {
   test.each([
-    [
-      [0, 1],
-      {
-        pageNum: 0,
-        count: 5,
-        totalCount: 10,
-      },
-    ],
-    [
-      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-      {
-        pageNum: 0,
-        count: 5,
-        totalCount: 50,
-      },
-    ],
-    [
-      [0, 1, 2, 3, -1, 99],
-      {
-        pageNum: 0,
-        count: 10,
-        totalCount: 1000,
-      },
-    ],
-    [
-      [0, -1, 96, 97, 98, 99],
-      {
-        pageNum: 99,
-        count: 10,
-        totalCount: 1000,
-      },
-    ],
-    [
-      [0, -1, 39, 40, 41, -1, 99],
-      {
-        pageNum: 40,
-        count: 10,
-        totalCount: 1000,
-      },
-    ],
-    [
-      [0, -1, 49, 50, 51, -1, 99],
-      {
-        pageNum: 50,
-        count: 10,
-        totalCount: 1000,
-      },
-    ],
-    [
-      [0, -1, 59, 60, 61, -1, 99],
-      {
-        pageNum: 60,
-        count: 10,
-        totalCount: 1000,
-      },
-    ],
-    [
-      [],
-      {
-        pageNum: 60,
-        count: 10,
-        totalCount: 0,
-      },
-    ],
-  ])("Returns %j for object %j", (expected, obj) => {
-    const actual = getArrayOfPages(obj);
+    [[0, 1], 2, 0],
+    [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 10, 0],
+    [[0, 1, 2, 3, -1, 99], 100, 0],
+    [[0, -1, 96, 97, 98, 99], 100, 100],
+    [[0, -1, 39, 40, 41, -1, 99], 100, 40],
+    [[0, -1, 49, 50, 51, -1, 99], 100, 50],
+    [[0, -1, 59, 60, 61, -1, 99], 100, 60],
+    [[0, 1, 2, 3, -1, 199], 200, 0],
+  ])("Returns %j for object %j", (expected, numberOfPages, pageNum) => {
+    const actual = getArrayOfPages(numberOfPages, pageNum);
     expect(actual).toEqual(expected);
   });
 });
