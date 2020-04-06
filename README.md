@@ -1,6 +1,6 @@
-# Skroutz Giphy Loader
+# Giphy Loader
 
-A giphy loader app written in vanilla javascript.
+A simple app that queries [GIPHY API](https://developers.giphy.com/) endpoints, written in vanilla javascript.
 
 ## Install dependencies
 
