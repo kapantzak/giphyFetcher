@@ -2,7 +2,7 @@
 
 A simple app that queries [GIPHY API](https://developers.giphy.com/) endpoints, written in vanilla javascript.
 
-![App screen](https://github.com/kapantzak/giphyFetcher/resources/screen_1.png)
+![App screen](https://github.com/kapantzak/giphyFetcher/blob/develop/resources/screen_1.png)
 
 ## Install dependencies
 
