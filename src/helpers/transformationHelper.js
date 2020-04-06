@@ -13,10 +13,16 @@ export const transformApiResponseObject = (apiResponseObject) => {
     const stateData = apiDataCollection.map(transformGifObjectStateData);
     return {
       data: stateData,
-      pagination: Object.assign({}, apiResponseObject.pagination),
+      pagination: Object.assign({}, apiResponseObject.pagination, {
+        pageNum: getPaginationPageNum(apiResponseObject.pagination),
+      }),
     };
   }
   return null;
+};
+
+export const getPaginationPageNum = ({ offset, count }) => {
+  return Math.floor(offset / count);
 };
 
 /**

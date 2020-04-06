@@ -1,5 +1,6 @@
 import {
   transformApiResponseObject,
+  getPaginationPageNum,
   transformGifObjectStateData,
   getImageSrcFromApiData,
 } from "../src/helpers/transformationHelper";
@@ -96,6 +97,7 @@ describe("transformApiResponseObject()", () => {
         total_count: 93688,
         count: 25,
         offset: 0,
+        pageNum: 0,
       },
     };
     expect(actual).toEqual(expected);
@@ -122,6 +124,7 @@ describe("transformApiResponseObject()", () => {
         total_count: 93688,
         count: 25,
         offset: 0,
+        pageNum: 0,
       },
     };
     expect(actual).toEqual(expected);
@@ -177,6 +180,49 @@ describe("transformApiResponseObject()", () => {
   test("Returns null if the api response object is undefined", () => {
     const actual = transformApiResponseObject();
     expect(actual).toBeNull();
+  });
+});
+
+describe("getPaginationPageNum()", () => {
+  test.each([
+    [
+      0,
+      {
+        offset: 0,
+        count: 25,
+      },
+    ],
+    [
+      0,
+      {
+        offset: 10,
+        count: 25,
+      },
+    ],
+    [
+      1,
+      {
+        offset: 25,
+        count: 25,
+      },
+    ],
+    [
+      1,
+      {
+        offset: 30,
+        count: 25,
+      },
+    ],
+    [
+      2,
+      {
+        offset: 50,
+        count: 25,
+      },
+    ],
+  ])("Returns %d for object %j", (expected, obj) => {
+    const actual = getPaginationPageNum(obj);
+    expect(actual).toBe(expected);
   });
 });
 

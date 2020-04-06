@@ -4,6 +4,7 @@ import {
   updateTerm,
   updateResults,
   updateAutocomplete,
+  deleteGif,
 } from "./helpers/stateHelper";
 import { getRandomId, searchGifs, getAutocomplete } from "./helpers/apiHelper";
 import {
@@ -16,12 +17,15 @@ import {
   cacheSearchTerm,
   clearCachedSearchTerm,
   getCachedSearchTerm,
+  cacheSearchResults,
 } from "./helpers/sessionHelper";
+import { getPaginationObject } from "./helpers/paginationHelper";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../public/css/style.css";
 
 let store = null;
+let paginationObj = null;
 
 const init = async () => {
   await initStore();
@@ -71,6 +75,10 @@ const getStateResults = () => {
   return state.results;
 };
 
+const getStatePaginationData = () => {
+  return (getStateResults() || {}).pagination || {};
+};
+
 const updateAutocompleteState = async (term) => {
   const optionsData = await getAutocomplete(term);
   if (optionsData) {
@@ -78,19 +86,30 @@ const updateAutocompleteState = async (term) => {
   }
 };
 
+const deleteGifItem = (gifId) => {
+  store.dispatch(deleteGif(gifId));
+  cacheSearchResults(store.getState().results);
+};
+
 // API calls ------------------------------------------------------------------- //
 
-const getGifs = async () => {
+const getGifs = async (offset = 0) => {
   const term = getStateTerm();
   const randomid = getStateRandomid();
   const gifs = await searchGifs({
     term,
-    offset: 0,
+    offset,
     randomid,
   });
   if (gifs) {
     store.dispatch(updateResults(gifs));
   }
+};
+
+const getGifsAndUpdateResults = async (offset = 0) => {
+  console.log(offset);
+  await getGifs(offset);
+  updateMarkup();
 };
 
 // Markup ---------------------------------------------------------------------- //
@@ -123,21 +142,21 @@ const updateSearchTermValue = (state) => {
 };
 
 const updateResultsMarkup = (state) => {
-  const gifs = state.results.data;
+  const gifs = (state.results || {}).data || null;
   const resultsHolderElem = document.getElementById("resultsHolder");
   if (resultsHolderElem) {
     resultsHolderElem.innerHTML = "";
     (gifs || []).forEach((x) => {
-      const gifHolder = buildGifHolder(x);
+      const gifHolder = buildGifHolder(x, deleteGifItem);
       resultsHolderElem.appendChild(gifHolder);
     });
   }
-  console.log(gifs);
 };
 
 const updatePaginationMarkup = (state) => {
-  const pagination = state.results.pagination;
+  const pagination = (state.results || {}).pagination || null;
   updateResultsResportMarkup(pagination);
+  updatePaginationElement(pagination);
 };
 
 const updateResultsResportMarkup = (pagination) => {
@@ -148,14 +167,57 @@ const updateResultsResportMarkup = (pagination) => {
   }
 };
 
+// Pagination ------------------------------------------------------------------ //
+
+const pageNavigationHandler = async (pageNumOrAction) => {
+  const statePagination = getStatePaginationData();
+  const offset = Number(statePagination.offset);
+  const count = Number(statePagination.count);
+  let requestOffset = 0;
+  if (pageNumOrAction === "left") {
+    requestOffset = offset - count;
+  } else if (pageNumOrAction === "right") {
+    requestOffset = offset + count;
+  } else {
+    const num = Number(pageNumOrAction);
+    if (!isNaN(num)) {
+      requestOffset = (num - 1) * count;
+    }
+  }
+  await getGifsAndUpdateResults(requestOffset);
+};
+
+const updatePaginationElement = (paginationData) => {
+  if (paginationData) {
+    if (!paginationObj) {
+      const paginationHolder = document.getElementById("paginationHolder");
+      if (paginationHolder) {
+        paginationObj = getPaginationObject(paginationHolder, {
+          offset: paginationData.offset,
+          count: paginationData.count,
+          totalCount: paginationData.total_count,
+          pageNum: paginationData.pageNum,
+          callback: pageNavigationHandler,
+        });
+      }
+    } else {
+      paginationObj.updatePages({
+        offset: paginationData.offset,
+        count: paginationData.count,
+        totalCount: paginationData.total_count,
+        pageNum: paginationData.pageNum,
+      });
+    }
+  }
+};
+
 // Event listeners ------------------------------------------------------------- //
 
 const txtSearchChangeHandler = async (e) => {
   const val = e.currentTarget.value;
   store.dispatch(updateTerm(val));
   cacheSearchTerm(val);
-  await getGifs();
-  updateMarkup();
+  await getGifsAndUpdateResults();
 };
 
 const txtSearchKeyPressHandler = (e) => {

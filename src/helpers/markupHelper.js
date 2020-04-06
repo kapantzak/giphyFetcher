@@ -23,8 +23,23 @@ export const getResultsReport = (paginationData) => {
       count !== null
     )
       return `Displaying ${paginationData.count} of ${paginationData.total_count} results`;
+    else return getNoResultsFeedback();
   }
-  return "";
+  return getPromptSearch();
+};
+
+export const getNoResultsFeedback = () => {
+  return `<div class="resuts-icon-holder">
+            <i class="far fa-frown"></i>
+            <p>We didn't find any results</p>  
+          </div>`;
+};
+
+export const getPromptSearch = () => {
+  return `<div class="resuts-icon-holder">
+            <i class="fas fa-search"></i>
+            <p>Type something to search!</p>  
+          </div>`;
 };
 
 export const getImageElem = ({ imgSrc, title }) => {
@@ -34,13 +49,14 @@ export const getImageElem = ({ imgSrc, title }) => {
   return img;
 };
 
-export const getDeleteGifButton = (gifId) => {
+export const getDeleteGifButton = (gifId, deleteGifItem) => {
   const btn = getElem("button", ["btn", "btn-outline-light"]);
   btn.setAttribute("type", "button");
   btn.setAttribute("title", "Delete this gif");
   btn.innerHTML = "Delete";
   btn.addEventListener("click", () => {
-    console.log(gifId);
+    deleteGifItem(gifId);
+    btn.closest(".gif-holder").remove();
   });
   return btn;
 };
@@ -49,14 +65,31 @@ export const getCopyLinkGifButton = (gifUrl) => {
   const btn = getElem("button", ["btn", "btn-outline-light"]);
   btn.setAttribute("type", "button");
   btn.setAttribute("title", "Copy link to clipboard");
-  btn.innerHTML = "Copy link";
-  btn.addEventListener("click", () => {
-    console.log(gifUrl);
+
+  const btnText = getElem("span", ["btn-gif-action-text"]);
+  btnText.innerText = "Copy link";
+
+  const checkIcon = getElem("i", ["fas", "fa-check", "btn-gif-action-icon"]);
+
+  btn.appendChild(btnText);
+  btn.appendChild(checkIcon);
+  btn.addEventListener("click", async () => {
+    if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(gifUrl);
+        checkIcon.classList.add("gif-action-icon-visible");
+        setTimeout(() => {
+          checkIcon.classList.remove("gif-action-icon-visible");
+        }, 1000);
+      } catch (e) {
+        //
+      }
+    }
   });
   return btn;
 };
 
-export const buildGifHolder = (data) => {
+export const buildGifHolder = (data, deleteGifItem) => {
   const gifHolder = getElem("div", ["gif-holder"]);
   const gifOverlay = getElem("div", ["gif-overlay"]);
   const gifTools = getElem("div", ["gif-tools"]);
@@ -69,7 +102,7 @@ export const buildGifHolder = (data) => {
   const btnGroup = getElem("div", ["btn-group", "btn-group-sm"]);
   btnGroup.setAttribute("role", "group");
 
-  const btnDelete = getDeleteGifButton(data.id);
+  const btnDelete = getDeleteGifButton(data.id, deleteGifItem);
   const btnCopyLink = getCopyLinkGifButton(data.gifUrl);
   btnGroup.appendChild(btnDelete);
   btnGroup.appendChild(btnCopyLink);
@@ -84,7 +117,17 @@ export const buildGifHolder = (data) => {
 
 export const getElem = (elemType, classList) => {
   if (elemType) {
-    const validHtmlTags = ["div", "span", "img", "button"];
+    const validHtmlTags = [
+      "div",
+      "span",
+      "img",
+      "button",
+      "nav",
+      "ul",
+      "li",
+      "a",
+      "i",
+    ];
     if (validHtmlTags.indexOf(elemType) !== -1) {
       const elem = document.createElement(elemType);
       const classes = classList || [];

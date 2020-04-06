@@ -1,6 +1,8 @@
 import {
   buildAutocompleteOptions,
   getResultsReport,
+  getNoResultsFeedback,
+  getPromptSearch,
   buildGifHolder,
   getElem,
   getImageElem,
@@ -60,42 +62,66 @@ describe("getResultsReport()", () => {
     expect(actual).toBe(expected);
   });
 
-  test("Returns empty string if total_count is null", () => {
+  test("Renders correct icon if total_count is null", () => {
     const paginationData = {
       total_count: null,
       count: 25,
       offset: 0,
     };
     const actual = getResultsReport(paginationData);
-    expect(actual).toBe("");
+    expect(actual).toMatchSnapshot();
   });
 
-  test("Returns empty string if total_count is undefined", () => {
+  test("Renders correct icon if total_count is undefined", () => {
     const paginationData = {
       count: 25,
       offset: 0,
     };
     const actual = getResultsReport(paginationData);
-    expect(actual).toBe("");
+    expect(actual).toMatchSnapshot();
   });
 
-  test("Returns empty string if count is null", () => {
+  test("Renders correct icon if count is null", () => {
     const paginationData = {
       total_count: 93688,
       count: null,
       offset: 0,
     };
     const actual = getResultsReport(paginationData);
-    expect(actual).toBe("");
+    expect(actual).toMatchSnapshot();
   });
 
-  test("Returns empty string if count is undefined", () => {
+  test("Renders correct icon if count is undefined", () => {
     const paginationData = {
       total_count: 93688,
       offset: 0,
     };
     const actual = getResultsReport(paginationData);
-    expect(actual).toBe("");
+    expect(actual).toMatchSnapshot();
+  });
+
+  test("Renders correct icon if paginationData is null", () => {
+    const actual = getResultsReport(null);
+    expect(actual).toMatchSnapshot();
+  });
+
+  test("Renders correct icon if paginationData is undefined", () => {
+    const actual = getResultsReport();
+    expect(actual).toMatchSnapshot();
+  });
+});
+
+describe("getNoResultsFeedback()", () => {
+  test("Renders correctly", () => {
+    const item = getNoResultsFeedback();
+    expect(item).toMatchSnapshot();
+  });
+});
+
+describe("getPromptSearch()", () => {
+  test("Renders correctly", () => {
+    const item = getPromptSearch();
+    expect(item).toMatchSnapshot();
   });
 });
 
@@ -176,6 +202,8 @@ describe("getCopyLinkGifButton()", () => {
 
   test("Returns button with text 'Copy link'", () => {
     const btn = getCopyLinkGifButton("https://path/to/img.html");
-    expect(btn.innerHTML).toBe("Copy link");
+    expect(btn.querySelector(".btn-gif-action-text").innerText).toBe(
+      "Copy link"
+    );
   });
 });

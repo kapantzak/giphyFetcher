@@ -30,7 +30,12 @@ exports[`buildGifHolder() Renders correctly 1`] = `
           title="Copy link to clipboard"
           type="button"
         >
-          Copy link
+          <span
+            class="btn-gif-action-text"
+          />
+          <i
+            class="fas fa-check btn-gif-action-icon"
+          />
         </button>
       </div>
     </div>
@@ -44,7 +49,12 @@ exports[`getCopyLinkGifButton() Renders corectly 1`] = `
   title="Copy link to clipboard"
   type="button"
 >
-  Copy link
+  <span
+    class="btn-gif-action-text"
+  />
+  <i
+    class="fas fa-check btn-gif-action-icon"
+  />
 </button>
 `;
 
@@ -63,4 +73,60 @@ exports[`getImageElem() Renders corectly 1`] = `
   src="https://path/to/img.gif"
   title="img_title"
 />
+`;
+
+exports[`getNoResultsFeedback() Renders correctly 1`] = `
+"<div class=\\"resuts-icon-holder\\">
+            <i class=\\"far fa-frown\\"></i>
+            <p>We didn't find any results</p>  
+          </div>"
+`;
+
+exports[`getPromptSearch() Renders correctly 1`] = `
+"<div class=\\"resuts-icon-holder\\">
+            <i class=\\"fas fa-search\\"></i>
+            <p>Type something to search!</p>  
+          </div>"
+`;
+
+exports[`getResultsReport() Renders correct icon if count is null 1`] = `
+"<div class=\\"resuts-icon-holder\\">
+            <i class=\\"far fa-frown\\"></i>
+            <p>We didn't find any results</p>  
+          </div>"
+`;
+
+exports[`getResultsReport() Renders correct icon if count is undefined 1`] = `
+"<div class=\\"resuts-icon-holder\\">
+            <i class=\\"far fa-frown\\"></i>
+            <p>We didn't find any results</p>  
+          </div>"
+`;
+
+exports[`getResultsReport() Renders correct icon if paginationData is null 1`] = `
+"<div class=\\"resuts-icon-holder\\">
+            <i class=\\"fas fa-search\\"></i>
+            <p>Type something to search!</p>  
+          </div>"
+`;
+
+exports[`getResultsReport() Renders correct icon if paginationData is undefined 1`] = `
+"<div class=\\"resuts-icon-holder\\">
+            <i class=\\"fas fa-search\\"></i>
+            <p>Type something to search!</p>  
+          </div>"
+`;
+
+exports[`getResultsReport() Renders correct icon if total_count is null 1`] = `
+"<div class=\\"resuts-icon-holder\\">
+            <i class=\\"far fa-frown\\"></i>
+            <p>We didn't find any results</p>  
+          </div>"
+`;
+
+exports[`getResultsReport() Renders correct icon if total_count is undefined 1`] = `
+"<div class=\\"resuts-icon-holder\\">
+            <i class=\\"far fa-frown\\"></i>
+            <p>We didn't find any results</p>  
+          </div>"
 `;
