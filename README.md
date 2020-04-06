@@ -2,6 +2,8 @@
 
 A simple app that queries [GIPHY API](https://developers.giphy.com/) endpoints, written in vanilla javascript.
 
+Check it on surge: [https://giphyfetcher.surge.sh/](https://giphyfetcher.surge.sh/)
+
 ![App screen](https://github.com/kapantzak/giphyFetcher/blob/develop/resources/screen_1.png)
 
 ## Install dependencies

@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [v1.0.0] - 2020-04-07
+
+**Uploaded to surge**
+
+### Added
+- State helper tests
+
+### Changed
+- API calls over `https`
+
 ## [v0.4.0] - 2020-04-06
 
 ### Changed
@@ -28,6 +38,7 @@
 - Pagination HTML
 
 [Unreleased]: https://github.com/kapantzak/giphyFetcher/compare/master...develop
+[v1.0.0]: https://github.com/kapantzak/giphyFetcher/compare/v0.4.0...v1.0.0
 [v0.4.0]: https://github.com/kapantzak/giphyFetcher/compare/v0.3.1...v0.4.0
 [v0.3.1]: https://github.com/kapantzak/giphyFetcher/compare/v0.3.0...v0.3.1
 [v0.3.0]: https://github.com/kapantzak/giphyFetcher/compare/v0.2.0...v0.3.0
