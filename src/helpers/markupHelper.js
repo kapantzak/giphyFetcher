@@ -64,9 +64,26 @@ export const getCopyLinkGifButton = (gifUrl) => {
   const btn = getElem("button", ["btn", "btn-outline-light"]);
   btn.setAttribute("type", "button");
   btn.setAttribute("title", "Copy link to clipboard");
-  btn.innerHTML = "Copy link";
-  btn.addEventListener("click", () => {
-    console.log(gifUrl);
+
+  const btnText = getElem("span", ["btn-gif-action-text"]);
+  btnText.innerText = "Copy link";
+
+  const checkIcon = getElem("i", ["fas", "fa-check", "btn-gif-action-icon"]);
+
+  btn.appendChild(btnText);
+  btn.appendChild(checkIcon);
+  btn.addEventListener("click", async () => {
+    if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(gifUrl);
+        checkIcon.classList.add("gif-action-icon-visible");
+        setTimeout(() => {
+          checkIcon.classList.remove("gif-action-icon-visible");
+        }, 1000);
+      } catch (e) {
+        //
+      }
+    }
   });
   return btn;
 };

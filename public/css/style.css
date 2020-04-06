@@ -77,6 +77,15 @@ h1 {
   transform: translateY(-50%);
 }
 
+.btn-gif-action-icon {
+  margin-left: 3px;
+  display: none;
+}
+
+.btn-gif-action-icon.gif-action-icon-visible {
+  display: inline-block;
+}
+
 #paginationHolder {
   margin-bottom: 5vh;
 }

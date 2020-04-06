@@ -30,7 +30,12 @@ exports[`buildGifHolder() Renders correctly 1`] = `
           title="Copy link to clipboard"
           type="button"
         >
-          Copy link
+          <span
+            class="btn-gif-action-text"
+          />
+          <i
+            class="fas fa-check btn-gif-action-icon"
+          />
         </button>
       </div>
     </div>
@@ -44,7 +49,12 @@ exports[`getCopyLinkGifButton() Renders corectly 1`] = `
   title="Copy link to clipboard"
   type="button"
 >
-  Copy link
+  <span
+    class="btn-gif-action-text"
+  />
+  <i
+    class="fas fa-check btn-gif-action-icon"
+  />
 </button>
 `;
 

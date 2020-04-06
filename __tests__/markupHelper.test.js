@@ -202,6 +202,8 @@ describe("getCopyLinkGifButton()", () => {
 
   test("Returns button with text 'Copy link'", () => {
     const btn = getCopyLinkGifButton("https://path/to/img.html");
-    expect(btn.innerHTML).toBe("Copy link");
+    expect(btn.querySelector(".btn-gif-action-text").innerText).toBe(
+      "Copy link"
+    );
   });
 });
