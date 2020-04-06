@@ -2,22 +2,47 @@ import { getElem } from "./markupHelper";
 
 export const getPaginationObject = (elem, options) => {
   if (elem && options) {
-    let _activePage = (options.offset || 0) + 1;
-    const _callback = options.callback;
-    const _paginationObj = getPaginationElement(options);
+    const ul = getPaginationUl({
+      offset: options.offset,
+      count: options.count,
+      totalCount: options.totalCount,
+      pageNum: options.pageNum,
+      callback: options.callback,
+    });
+    const _paginationObj = getPaginationElement(ul);
+    const _activePageElement = _paginationObj.querySelector(
+      `[data-page="${options.offset}"]`
+    );
+    if (_activePageElement) {
+      _activePageElement.classList.add("active");
+    }
+
+    const _replaceUl = ({ offset, count, totalCount, pageNum }) => {
+      if (_paginationObj) {
+        const updatedUl = getPaginationUl({
+          offset,
+          count,
+          totalCount,
+          pageNum,
+          callback: options.callback,
+        });
+        _paginationObj.innerHTML = "";
+        _paginationObj.appendChild(updatedUl);
+      }
+    };
 
     if (_paginationObj) {
-      elem.appendChild(_paginationObj.obj);
+      elem.appendChild(_paginationObj);
 
       return {
-        setActivePage: (pageNumber) => {
-          _activePage = pageNumber;
-        },
-        prev: () => {
-          _callback(_activePage - 1);
-        },
-        next: () => {
-          _callback(_activePage + 1);
+        updatePages: ({ offset, count, totalCount, pageNum }) => {
+          _replaceUl({
+            offset,
+            count,
+            totalCount,
+            pageNum,
+            callback: options.callback,
+          });
         },
       };
     } else {
@@ -28,40 +53,61 @@ export const getPaginationObject = (elem, options) => {
   }
 };
 
-export const getPaginationElement = ({
-  offset,
-  count,
-  totalCount,
-  callback,
-}) => {
+export const getPaginationElement = (ul) => {
   const nav = getElem("nav");
   nav.setAttribute("aria-label", "Pagination controls");
+  nav.appendChild(ul);
+  return nav;
+};
+
+export const getPaginationUl = (obj) => {
   const ul = getElem("ul", ["pagination"]);
-  const prev = getPaginationItemArrow("left", callback);
-  const next = getPaginationItemArrow("right", callback);
-  const pages = [];
+  const prev = getPaginationItemArrow("left", obj.callback);
+  const next = getPaginationItemArrow("right", obj.callback);
 
   ul.appendChild(prev);
-
-  // Append pages
-  const numberOfPages = getNumberOfPages({ count, totalCount });
-  [...Array(numberOfPages).keys()].forEach((index) => {
-    const p = index + 1;
-    const isActive = index === offset;
-    const item = getPaginationItem(p, callback, isActive);
-    pages.push(item);
-    ul.appendChild(item);
-  });
-
+  appendPaginationPages(ul, obj);
   ul.appendChild(next);
-  nav.appendChild(ul);
+  return ul;
+};
 
-  return {
-    obj: nav,
-    prev,
-    next,
-    pages,
-  };
+export const appendPaginationPages = (
+  ul,
+  { offset, count, totalCount, pageNum, callback }
+) => {
+  const arrayOfPages = getArrayOfPages({ offset, count, totalCount, pageNum });
+  arrayOfPages.forEach((x, index) => {
+    let item = null;
+    if (x !== -1) {
+      const p = x + 1;
+      const isActive = x === pageNum;
+      item = getPaginationItem(p, callback, isActive);
+    } else {
+      item = getPaginationItemRest();
+    }
+    if (item) {
+      ul.appendChild(item);
+    }
+  });
+};
+
+export const getArrayOfPages = ({ count, totalCount, pageNum }) => {
+  const num = getNumberOfPages({ count, totalCount });
+  if (!isNaN(num)) {
+    if (num > 10) {
+      if (pageNum <= 2) {
+        return [0, 1, 2, 3, -1, num - 1];
+      } else if (pageNum >= num - 3) {
+        return [0, -1, num - 4, num - 3, num - 2, num - 1];
+      } else {
+        const middleIndexes = [pageNum - 1, pageNum, pageNum + 1];
+        return [0, -1, ...middleIndexes, -1, num - 1];
+      }
+    } else {
+      return [...Array(num).keys()];
+    }
+  }
+  return [];
 };
 
 /**
@@ -70,7 +116,8 @@ export const getPaginationElement = ({
  * @returns {number}
  */
 export const getNumberOfPages = ({ count, totalCount }) => {
-  return Math.ceil(totalCount / count);
+  if (totalCount > 0) return Math.ceil(totalCount / count);
+  return 0;
 };
 
 export const getPaginationItemArrow = (direction, callback) => {
@@ -115,6 +162,7 @@ export const getPaginationItem = (
   }
   const anchor = getElem("a", anchorClassList);
   anchor.setAttribute("href", "#");
+  anchor.setAttribute("data-page", pageNum - 1);
   anchor.innerHTML = pageNum;
   anchor.addEventListener("click", (e) => {
     e.preventDefault();

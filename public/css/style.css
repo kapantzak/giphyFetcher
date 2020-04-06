@@ -81,34 +81,6 @@ h1 {
   margin-bottom: 5vh;
 }
 
-/* .page-item-rest {
-  position: relative;
-  overflow: visible;
-}
-
-.pg-rest-holder {
-  margin-bottom: 10px;
-}
-
-.pg-rest-list-holder {
-  max-height: 100px;
-  overflow-y: auto;
-}
-
-.pg-rest-list-holder > ul {
-  display: block;
-  margin-right: 5px;
-}
-
-.pg-rest-list-holder > ul > li.list-group-item {
-  padding: 5px 15px;
-}
-
-.pg-rest-list-holder > ul > li.list-group-item.active {
-  background-color: #f68b24;
-  border-color: #f68b24;
-} */
-
 .btn-orange {
   color: #fff;
   background-color: #f68b24;
@@ -118,6 +90,11 @@ h1 {
 .page-link,
 .page-link:hover {
   color: #222;
+}
+
+.page-link.active {
+  background-color: #f68b24;
+  color: #fff;
 }
 
 footer {

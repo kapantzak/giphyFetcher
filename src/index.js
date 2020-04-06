@@ -73,8 +73,8 @@ const getStateResults = () => {
   return state.results;
 };
 
-const getStatePaginationOffset = () => {
-  return ((getStateResults() || {}).pagination || {}).offset || 0;
+const getStatePaginationData = () => {
+  return (getStateResults() || {}).pagination || {};
 };
 
 const updateAutocompleteState = async (term) => {
@@ -100,6 +100,7 @@ const getGifs = async (offset = 0) => {
 };
 
 const getGifsAndUpdateResults = async (offset = 0) => {
+  console.log(offset);
   await getGifs(offset);
   updateMarkup();
 };
@@ -143,7 +144,6 @@ const updateResultsMarkup = (state) => {
       resultsHolderElem.appendChild(gifHolder);
     });
   }
-  console.log(gifs);
 };
 
 const updatePaginationMarkup = (state) => {
@@ -163,17 +163,21 @@ const updateResultsResportMarkup = (pagination) => {
 // Pagination ------------------------------------------------------------------ //
 
 const pageNavigationHandler = async (pageNumOrAction) => {
-  const offset = getStatePaginationOffset();
+  const statePagination = getStatePaginationData();
+  const offset = Number(statePagination.offset);
+  const count = Number(statePagination.count);
+  let requestOffset = 0;
   if (pageNumOrAction === "left") {
-    await getGifsAndUpdateResults(offset + 1);
+    requestOffset = offset - count;
   } else if (pageNumOrAction === "right") {
-    await getGifsAndUpdateResults(offset - 1);
+    requestOffset = offset + count;
   } else {
     const num = Number(pageNumOrAction);
     if (!isNaN(num)) {
-      await getGifsAndUpdateResults(num - 1);
+      requestOffset = (num - 1) * count;
     }
   }
+  await getGifsAndUpdateResults(requestOffset);
 };
 
 const updatePaginationElement = (paginationData) => {
@@ -185,11 +189,17 @@ const updatePaginationElement = (paginationData) => {
           offset: paginationData.offset,
           count: paginationData.count,
           totalCount: paginationData.total_count,
+          pageNum: paginationData.pageNum,
           callback: pageNavigationHandler,
         });
       }
     } else {
-      // Update pagination object with active page
+      paginationObj.updatePages({
+        offset: paginationData.offset,
+        count: paginationData.count,
+        totalCount: paginationData.total_count,
+        pageNum: paginationData.pageNum,
+      });
     }
   }
 };

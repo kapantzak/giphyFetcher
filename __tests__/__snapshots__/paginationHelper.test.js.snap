@@ -18,6 +18,7 @@ exports[`getPaginationItem() Active page rendered correctly 1`] = `
 >
   <a
     class="page-link active"
+    data-page="0"
     href="#"
   >
     1
@@ -31,6 +32,7 @@ exports[`getPaginationItem() Renders correctly 1`] = `
 >
   <a
     class="page-link"
+    data-page="0"
     href="#"
   >
     1
