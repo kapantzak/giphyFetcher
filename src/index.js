@@ -42,6 +42,7 @@ const getInitialState = async () => {
     term: getInitialSearchTerm(),
     autocomplete: [],
     results: getInitialResults(),
+    totalItemsFeched: 0,
   };
 };
 

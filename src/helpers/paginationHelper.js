@@ -61,21 +61,35 @@ export const getPaginationElement = (ul) => {
 };
 
 export const getPaginationUl = (obj) => {
-  const ul = getElem("ul", ["pagination"]);
-  const prev = getPaginationItemArrow("left", obj.callback);
-  const next = getPaginationItemArrow("right", obj.callback);
+  const num = getNumberOfPages({
+    count: obj.count,
+    totalCount: obj.totalCount,
+  });
+  if (!isNaN(num)) {
+    const ul = getElem("ul", ["pagination"]);
 
-  ul.appendChild(prev);
-  appendPaginationPages(ul, obj);
-  ul.appendChild(next);
-  return ul;
+    if (obj.pageNum > 0) {
+      const prev = getPaginationItemArrow("left", obj.callback);
+      ul.appendChild(prev);
+    }
+
+    appendPaginationPages(ul, num, obj);
+
+    if (obj.pageNum < num - 1) {
+      const next = getPaginationItemArrow("right", obj.callback);
+      ul.appendChild(next);
+    }
+    return ul;
+  }
+  return null;
 };
 
 export const appendPaginationPages = (
   ul,
-  { offset, count, totalCount, pageNum, callback }
+  numberOfPages,
+  { pageNum, callback }
 ) => {
-  const arrayOfPages = getArrayOfPages({ offset, count, totalCount, pageNum });
+  const arrayOfPages = getArrayOfPages(numberOfPages, pageNum);
   arrayOfPages.forEach((x, index) => {
     let item = null;
     if (x !== -1) {
@@ -91,32 +105,27 @@ export const appendPaginationPages = (
   });
 };
 
-export const getArrayOfPages = ({ count, totalCount, pageNum }) => {
-  const num = getNumberOfPages({ count, totalCount });
-  if (!isNaN(num)) {
-    if (num > 10) {
-      if (pageNum <= 2) {
-        return [0, 1, 2, 3, -1, num - 1];
-      } else if (pageNum >= num - 3) {
-        return [0, -1, num - 4, num - 3, num - 2, num - 1];
-      } else {
-        const middleIndexes = [pageNum - 1, pageNum, pageNum + 1];
-        return [0, -1, ...middleIndexes, -1, num - 1];
-      }
+export const getArrayOfPages = (num, pageNum) => {
+  if (num > 10) {
+    if (pageNum <= 2) {
+      return [0, 1, 2, 3, -1, num - 1];
+    } else if (pageNum >= num - 3) {
+      return [0, -1, num - 4, num - 3, num - 2, num - 1];
     } else {
-      return [...Array(num).keys()];
+      const middleIndexes = [pageNum - 1, pageNum, pageNum + 1];
+      return [0, -1, ...middleIndexes, -1, num - 1];
     }
+  } else {
+    return [...Array(num).keys()];
   }
-  return [];
 };
 
-/**
- * Calculate the number of pages available based on the total number of items and items per page number
- * @param {object} param0
- * @returns {number}
- */
 export const getNumberOfPages = ({ count, totalCount }) => {
-  if (totalCount > 0) return Math.ceil(totalCount / count);
+  if (totalCount > 0) {
+    // API limit [https://github.com/Giphy/GiphyAPI/issues/88]
+    const totalAvailable = totalCount <= 5000 ? totalCount : 5000;
+    return Math.ceil(totalAvailable / count);
+  }
   return 0;
 };
 

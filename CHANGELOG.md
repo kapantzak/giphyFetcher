@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [v0.4.0] - 2020-04-06
+
+### Changed
+- Repository name
+
+### Removed
+- Unwanted state prop
+
 ## [v0.3.1] - 2020-04-06
 
 ### Fixed
@@ -19,7 +27,8 @@
 ### Added
 - Pagination HTML
 
-[Unreleased]: https://github.com/kapantzak/skroutzGiphy/compare/master...develop
-[v0.3.1]: https://github.com/kapantzak/skroutzGiphy/compare/v0.3.0...v0.3.1
-[v0.3.0]: https://github.com/kapantzak/skroutzGiphy/compare/v0.2.0...v0.3.0
-[v0.2.0]: https://github.com/kapantzak/skroutzGiphy/compare/v0.1.0...v0.2.0
+[Unreleased]: https://github.com/kapantzak/giphyFetcher/compare/master...develop
+[v0.4.0]: https://github.com/kapantzak/giphyFetcher/compare/v0.3.1...v0.4.0
+[v0.3.1]: https://github.com/kapantzak/giphyFetcher/compare/v0.3.0...v0.3.1
+[v0.3.0]: https://github.com/kapantzak/giphyFetcher/compare/v0.2.0...v0.3.0
+[v0.2.0]: https://github.com/kapantzak/giphyFetcher/compare/v0.1.0...v0.2.0
