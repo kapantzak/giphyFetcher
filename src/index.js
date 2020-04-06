@@ -4,6 +4,7 @@ import {
   updateTerm,
   updateResults,
   updateAutocomplete,
+  deleteGif,
 } from "./helpers/stateHelper";
 import { getRandomId, searchGifs, getAutocomplete } from "./helpers/apiHelper";
 import {
@@ -16,6 +17,7 @@ import {
   cacheSearchTerm,
   clearCachedSearchTerm,
   getCachedSearchTerm,
+  cacheSearchResults,
 } from "./helpers/sessionHelper";
 import { getPaginationObject } from "./helpers/paginationHelper";
 
@@ -84,6 +86,11 @@ const updateAutocompleteState = async (term) => {
   }
 };
 
+const deleteGifItem = (gifId) => {
+  store.dispatch(deleteGif(gifId));
+  cacheSearchResults(store.getState().results);
+};
+
 // API calls ------------------------------------------------------------------- //
 
 const getGifs = async (offset = 0) => {
@@ -140,7 +147,7 @@ const updateResultsMarkup = (state) => {
   if (resultsHolderElem) {
     resultsHolderElem.innerHTML = "";
     (gifs || []).forEach((x) => {
-      const gifHolder = buildGifHolder(x);
+      const gifHolder = buildGifHolder(x, deleteGifItem);
       resultsHolderElem.appendChild(gifHolder);
     });
   }

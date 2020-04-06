@@ -49,13 +49,14 @@ export const getImageElem = ({ imgSrc, title }) => {
   return img;
 };
 
-export const getDeleteGifButton = (gifId) => {
+export const getDeleteGifButton = (gifId, deleteGifItem) => {
   const btn = getElem("button", ["btn", "btn-outline-light"]);
   btn.setAttribute("type", "button");
   btn.setAttribute("title", "Delete this gif");
   btn.innerHTML = "Delete";
   btn.addEventListener("click", () => {
-    console.log(gifId);
+    deleteGifItem(gifId);
+    btn.closest(".gif-holder").remove();
   });
   return btn;
 };
@@ -88,7 +89,7 @@ export const getCopyLinkGifButton = (gifUrl) => {
   return btn;
 };
 
-export const buildGifHolder = (data) => {
+export const buildGifHolder = (data, deleteGifItem) => {
   const gifHolder = getElem("div", ["gif-holder"]);
   const gifOverlay = getElem("div", ["gif-overlay"]);
   const gifTools = getElem("div", ["gif-tools"]);
@@ -101,7 +102,7 @@ export const buildGifHolder = (data) => {
   const btnGroup = getElem("div", ["btn-group", "btn-group-sm"]);
   btnGroup.setAttribute("role", "group");
 
-  const btnDelete = getDeleteGifButton(data.id);
+  const btnDelete = getDeleteGifButton(data.id, deleteGifItem);
   const btnCopyLink = getCopyLinkGifButton(data.gifUrl);
   btnGroup.appendChild(btnDelete);
   btnGroup.appendChild(btnCopyLink);
