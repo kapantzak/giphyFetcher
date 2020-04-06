@@ -7,11 +7,10 @@ import {
 } from "./sessionHelper";
 import { transformApiResponseObject } from "./transformationHelper";
 
-const endpoints = config.api.endpoints;
-
 // Random id ---------------------------------------------------------------------------------------------- //
 
 export const getRandomIdRequestUrl = (config) => {
+  const endpoints = config.api.endpoints;
   const randomid = endpoints.randomid;
   const params = randomid.params;
   return `${endpoints.base}${randomid.url}?${params.key}=${config.api.apiKey}`;

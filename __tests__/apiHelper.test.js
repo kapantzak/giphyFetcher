@@ -9,7 +9,7 @@ const config = {
   api: {
     apiKey: "API_KEY",
     endpoints: {
-      base: "http://api.giphy.com/v1/",
+      base: "https://api.giphy.com/v1/",
       search: {
         url: "gifs/search",
         params: {
@@ -47,7 +47,7 @@ const config = {
 describe("getRandomIdRequestUrl()", () => {
   test("Returns the expected random id url based on provided config", () => {
     const actual = getRandomIdRequestUrl(config);
-    const expected = "http://api.giphy.com/v1/randomid?api_key=API_KEY";
+    const expected = "https://api.giphy.com/v1/randomid?api_key=API_KEY";
     expect(actual).toBe(expected);
   });
 });
@@ -61,7 +61,7 @@ describe("searchGifsRequestUrl()", () => {
       randomid: "a_random_id",
     });
     const expected =
-      "http://api.giphy.com/v1/gifs/search?api_key=API_KEY&q=cat&offset=0&random_id=a_random_id";
+      "https://api.giphy.com/v1/gifs/search?api_key=API_KEY&q=cat&offset=0&random_id=a_random_id";
     expect(actual).toBe(expected);
   });
 });
@@ -74,7 +74,7 @@ describe("trendingRequestUrl()", () => {
       randomid: "a_random_id",
     });
     const expected =
-      "http://api.giphy.com/v1/gifs/trending?api_key=API_KEY&offset=0&random_id=a_random_id";
+      "https://api.giphy.com/v1/gifs/trending?api_key=API_KEY&offset=0&random_id=a_random_id";
     expect(actual).toBe(expected);
   });
 });
@@ -86,7 +86,7 @@ describe("getAutocompleteRequestUrl()", () => {
       term: "cat",
     });
     const expected =
-      "http://api.giphy.com/v1/gifs/search/tags?api_key=API_KEY&q=cat";
+      "https://api.giphy.com/v1/gifs/search/tags?api_key=API_KEY&q=cat";
     expect(actual).toBe(expected);
   });
 });
