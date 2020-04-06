@@ -24,6 +24,14 @@
           "key": "api_key",
           "term": "q"
         }
+      },
+      "trending": {
+        "url": "gifs/trending",
+        "params": {
+          "key": "api_key",
+          "offset": "offset",
+          "randomid": "random_id"
+        }
       }
     }
   },

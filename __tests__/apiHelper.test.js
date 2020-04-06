@@ -1,6 +1,7 @@
 import {
   getRandomIdRequestUrl,
   searchGifsRequestUrl,
+  trendingRequestUrl,
   getAutocompleteRequestUrl,
 } from "../src/helpers/apiHelper";
 
@@ -31,6 +32,14 @@ const config = {
           term: "q",
         },
       },
+      trending: {
+        url: "gifs/trending",
+        params: {
+          key: "api_key",
+          offset: "offset",
+          randomid: "random_id",
+        },
+      },
     },
   },
 };
@@ -53,6 +62,19 @@ describe("searchGifsRequestUrl()", () => {
     });
     const expected =
       "http://api.giphy.com/v1/gifs/search?api_key=API_KEY&q=cat&offset=0&random_id=a_random_id";
+    expect(actual).toBe(expected);
+  });
+});
+
+describe("trendingRequestUrl()", () => {
+  test("Returns the expected trending url based on provided config", () => {
+    const actual = trendingRequestUrl({
+      config,
+      offset: 0,
+      randomid: "a_random_id",
+    });
+    const expected =
+      "http://api.giphy.com/v1/gifs/trending?api_key=API_KEY&offset=0&random_id=a_random_id";
     expect(actual).toBe(expected);
   });
 });

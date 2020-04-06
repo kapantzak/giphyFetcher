@@ -22,6 +22,10 @@ export const appReducer = (state, action) => {
           data: state.results.data.filter((x) => x.id !== action.payload.gifId),
         }),
       });
+    case "SET_TRENDING":
+      return Object.assign({}, state, {
+        trending: action.payload.trending || false,
+      });
     default:
       return state;
   }
@@ -59,5 +63,12 @@ export const deleteGif = (gifId) => ({
   type: "DELETE_GIF",
   payload: {
     gifId,
+  },
+});
+
+export const setTrending = (trending) => ({
+  type: "SET_TRENDING",
+  payload: {
+    trending,
   },
 });
