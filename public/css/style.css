@@ -122,3 +122,9 @@ footer {
     font-size: 1.5em;
   }
 }
+
+@media screen and (max-width: 570px) {
+  .gif-holder > img {
+    max-width: 100%;
+  }
+}
