@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [v1.1.2] - 2020-04-10
+
+### Added
+- GIPHY attribution icon to the footer
+
+### Fixed
+- Image width in small screen sizes
+
 ## [v1.1.1] - 2020-04-07
 
 ### Fixed
@@ -51,6 +59,7 @@
 - Pagination HTML
 
 [Unreleased]: https://github.com/kapantzak/giphyFetcher/compare/master...develop
+[v1.1.2]: https://github.com/kapantzak/giphyFetcher/compare/v1.1.1...v1.1.2
 [v1.1.1]: https://github.com/kapantzak/giphyFetcher/compare/v1.1.0...v1.1.1
 [v1.1.0]: https://github.com/kapantzak/giphyFetcher/compare/v1.0.0...v1.1.0
 [v1.0.0]: https://github.com/kapantzak/giphyFetcher/compare/v0.4.0...v1.0.0
